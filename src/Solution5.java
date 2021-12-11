@@ -1,4 +1,5 @@
 public class Solution5 {
+    //version1 2021/04
     public String longestPalindrome_Self(String s) {
 
         int i = 0;
@@ -44,8 +45,7 @@ public class Solution5 {
 
         return maxSubStr;
     }
-
-    public String longestPalindrome(String s) {
+    public String longestPalindrome_version2(String s) {
         if(s==null){
             return null;
         }
@@ -76,13 +76,67 @@ public class Solution5 {
         }
         return ans;
     }
+    //version3 2021年12月11日10:12:03
+    //dp[i][j] = dp[i+1][j-1]+2
+    public String longestPalindrome(String s) {
+        if (s== null ||  s.length() < 1){
+            return null;
+        }
+        if ( s.length() == 1 ) {
+            return s;
+        }
 
+        int[] dp = new int[s.length()];
+        int startIndex = -1 ,endIndex = -1;
+        int maxLen = 0;
+        for(int i = s.length()-1 ; i >=0 ;i--){
+            for(int j = s.length()-1 ; j >=i  ;j--){
+                if(i==j){
+                    dp[j] = 1;
+                    if(dp[j] > maxLen){
+                        maxLen = dp[j];
+                        startIndex = i;
+                        endIndex = j;
+                    }
+                }
+                else if(j == i+1){
+                    if(s.charAt(i) == s.charAt( j)) {
+                        dp[j] = 2;
+                        if(dp[j] > maxLen){
+                            maxLen = dp[j];
+                            startIndex = i;
+                            endIndex = j;
+                        }
+                    }
+                    else{
+                        dp[j] = 0;
+                    }
+                }
+                else{
+                    if(s.charAt(i) == s.charAt(j)&&dp[j-1]>0) {
+                        dp[j] = dp[j-1]+2;
+                        if(dp[j] > maxLen){
+                            maxLen = dp[j];
+                            startIndex = i;
+                            endIndex = j;
+                        }
+                    }
+                    else{
+                        dp[j] = 0;
+                    }
+                }
+            }
+
+        }
+
+        return  s.substring(startIndex,endIndex+1);
+    }
 
     public static void main(String[] args) {
         String str = "01234567";
         System.out.println(str.substring(1,8));
 
-        String data  = "cbbd";
+        String data  = "aacabdkacaa";
         Solution5 solution = new Solution5();
         System.out.println(solution.longestPalindrome(data));
     }

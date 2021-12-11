@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Solution3 {
-    public int lengthOfLongestSubstring(String s) {
+    public int lengthOfLongestSubstring_version1(String s) {
         //首先处理边界条件
         if(s==null||s.length()==0){
             return 0;
@@ -38,6 +38,38 @@ public class Solution3 {
         }
 
         return maxLen;
+    }
+
+    //version2 2021年12月10日22:41:53
+    public int lengthOfLongestSubstring(String s) {
+        if( s== null || s.length() == 0 ) {
+            return 0;
+        }
+        if(s.length() == 1){
+            return 1;
+        }
+
+        int[] lastAppear = new int[128];
+        for( int i = 0 ; i <128 ; i++ ) {
+            lastAppear[i] = -1;
+        }
+        int maxLength = -1;
+        int startIndex = 0;
+        for(int i = 0 ; i < s.length() ; i++ ) {
+            char tem = s.charAt(i);
+            if( lastAppear[(int)tem] == -1 ) {
+                lastAppear[(int)tem] = i;
+                maxLength = maxLength>(i-startIndex+1)?maxLength:(i-startIndex+1);
+            }
+            else{
+                for(;startIndex<=lastAppear[(int)tem];startIndex++){
+                    lastAppear[s.charAt(startIndex)] = -1;
+                }
+
+                lastAppear[(int)tem] = i;
+            }
+        }
+        return  maxLength;
     }
 
     @Test

@@ -2,7 +2,9 @@ import java.sql.Array;
 import java.util.*;
 
 public class Solution49 {
-    public List<List<String>> groupAnagrams(String[] strs) {
+
+    //version1 202104
+    public List<List<String>> groupAnagrams_version1(String[] strs) {
         Map<String,List<String>> map = new HashMap<String,List<String>>();
         for(String str : strs){
             char[] cstr = str.toCharArray();
@@ -14,4 +16,6 @@ public class Solution49 {
         }
         return new LinkedList<List<String>>(map.values());
     }
+
+    //version 20211205
 }
