@@ -11,7 +11,8 @@ public class Solution2 {
         ListNode(int val, ListNode next) { this.val = val; this.next = next; }
     }
 
-    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+    //Version1 2021/03
+    public ListNode addTwoNumbers_version1(ListNode l1, ListNode l2) {
         //首先对边界条件进行处理
         if(l1==null){
             return l2;
@@ -64,12 +65,59 @@ public class Solution2 {
         return root;
     }
 
+    //2022年3月4日22:37:57
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        if( l1 == null ) {
+            return l2;
+        }
+        if( l2 == null ) {
+            return l1;
+        }
+
+        ListNode recycleHead = l2;
+        ListNode resp = l1;
+        ListNode lastL1 = null;
+        boolean carryFlag = false;
+        while( (l1!=null||l2!=null)||carryFlag==true) {
+            if( l1 == null ) {
+                if(recycleHead != null ) {
+                    lastL1.next = recycleHead;
+                    recycleHead.val = 0;
+                    recycleHead = recycleHead.next;
+                    l1 = lastL1.next;
+                    l1.next =null;
+                }
+                else{
+                    l1 = lastL1.next = new ListNode(0);
+                }
+            }
+
+            int num = l1.val + (l2==null?0:l2.val) + (carryFlag?1:0);
+            if(num>=10){
+                num -= 10;
+                carryFlag =true;
+            }
+            else{
+                carryFlag = false;
+            }
+
+            l1.val = num;
+
+            lastL1 = l1;
+            l1 = l1.next;
+            if( l2 != null ) {
+                l2 = l2.next;
+            }
+        }
+        return resp;
+    }
+
     @Test
     public void test1(){
         ListNode L1 ;
         ListNode L2 ;
-        int[] data1 = {9,3,9,0,9,9};
-        int[] data2 = {2,4,1,9};
+        int[] data1 = {1};
+        int[] data2 = {9,9,9,1};
 
         ListNode p = new ListNode(0);
         L1 = p;
