@@ -16,36 +16,42 @@ public class Solution138 {
             this.next = null;
             this.random = null;
         }
+        public Node(){
+            this.val = 0;
+            this.next = null;
+            this.random = null;
+        }
     }
 
     public Node copyRandomList(Node head) {
-        if(head == null)
+        //用个HashMap记录新老的对应关系
+        if ( head == null ) {
             return null;
-        Node newHead1 = new Node(0);
-        Node newHead2 = new Node(0);
-        newHead1.next = head;
-        Node p = newHead1;
-        Node q = newHead2;
-        p=p.next;
-        HashMap<Node, Node> map = new HashMap<>();
-        while(p!=null){
+        }
+
+        Node newHead = new Node(-1);
+        Node p = head ,q = newHead;
+
+        Map<Node,Node> map = new HashMap<Node,Node>();
+        map.put(null,null);
+        while(p!=null) {
             q.next = new Node(p.val);
-            q.next.random = p.random;
             map.put(p,q.next);
+
             q=q.next;
-            p=p.next;
+            p = p .next;
         }
-        q.next=null;
 
-        q = newHead2;
-        while(q.next!=null){
+        q = newHead.next;
+        p = head;
+        while(p!=null) {
+            q.random = map.get(p.random);
+
             q = q.next;
-            if( q.random!=null ){
-                q.random = map.get(q.random);
-            }
-
+            p = p.next;
         }
-        return newHead2.next;
+
+        return newHead.next;
     }
 
     @Test
@@ -55,5 +61,10 @@ public class Solution138 {
         node1.next = node2;
 
         Node head = null;
+
+        Map<Node,Node> nodeHashMap = new HashMap<Node,Node>();
+        nodeHashMap.put(null,node1);
+        Node node = nodeHashMap.get(null);
+        System.out.println(node.val);
     }
 }

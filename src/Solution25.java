@@ -9,47 +9,46 @@ public class Solution25 {
         ListNode(int val, ListNode next) { this.val = val; this.next = next; }
     }
     public ListNode reverseKGroup(ListNode head, int k) {
-        if(head == null){
-            return null;
-        }
-        if(k==1){
-            return head;
-        }
+      if(head == null ) {
+          return null;
+      }
+      if(k==1) {
+          return head;
+      }
 
-        //初始化
-        ListNode newHead,poineer = head,p=poineer,nowTail=null;
-        newHead = new ListNode(0,head);
-        ListNode lastTail = newHead;
-        ListNode reverseList = new ListNode(0);
-        ListNode tem;
-        //开始算法过程
-        int step;
-        while(true){
-            step=k;
-            while(poineer !=null&&step-->0)
-                poineer = poineer.next;
-            //情况一：poineer==null&&step==0代表运行到整个链表的末尾，且链表n%k==0
-            //情况二：poineer==null&&stet>0则代表n%k!=0
-            if(poineer==null&&step>0){
-                lastTail.next = p;
-                break;
-            }
+      ListNode newHead = new ListNode();
+      newHead.next = head;
 
-            //下一步要加上对情况一的处理
-            nowTail=p;
-            while(p!=poineer){
-                tem = p.next;
-                p.next = reverseList.next;
-                reverseList.next = p;
-                p=tem;
-            }
-            lastTail.next = reverseList.next;
-            lastTail = nowTail;
+      ListNode start=head,end=head,lastTail = newHead;
+      while(end!=null) {
+          int step = 0 ;
+          while(end != null && step!=k) {
+              end = end.next;
+              step++;
+          }
+          ListNode newTail =null;
+          if(step==k) {
+              newTail = start;
+              //翻转head到end之前的结点
+              lastTail.next = reverse(start,end);
+              lastTail = newTail;
+              start = end;
+          }
+          else{
+              return newHead.next;
+          }
+      }
+      return newHead.next;
+    }
 
-            if(poineer == null&&step==0){
-                lastTail.next = null;
-                break;
-            }
+    public ListNode reverse(ListNode head ,ListNode end) {
+        ListNode newHead = new ListNode(-1);
+        newHead.next = end;
+        while(head!=end){
+            ListNode tem  = head;
+            head = head.next;
+            tem.next = newHead.next;
+            newHead.next = tem;
         }
         return newHead.next;
     }
@@ -58,7 +57,7 @@ public class Solution25 {
     public void test1(){
         Solution25 solution25 = new Solution25();
         int[] data = {1,2,3,4,5,6,7,8,9};
-        int k = 10;
+        int k = 4;
 
         ListNode p = new ListNode();
         ListNode L1 = p;

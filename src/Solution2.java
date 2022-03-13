@@ -1,15 +1,10 @@
 import org.junit.Test;
+import utils.ListNode;
 
 import java.util.jar.JarOutputStream;
 
 public class Solution2 {
-    class ListNode {
-        int val;
-        ListNode next;
-        ListNode() {}
-        ListNode(int val) { this.val = val; }
-        ListNode(int val, ListNode next) { this.val = val; this.next = next; }
-    }
+
 
     //Version1 2021/03
     public ListNode addTwoNumbers_version1(ListNode l1, ListNode l2) {

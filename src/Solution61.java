@@ -9,29 +9,45 @@ public class Solution61 {
         ListNode(int val, ListNode next) { this.val = val; this.next = next; }
     }
 
+    /**
+     * k > len k = k % len
+     * 之后
+     * step = len - k
+     *
+     * @param head
+     * @param k
+     * @return
+     */
     public ListNode rotateRight(ListNode head, int k) {
-        //处理一些边界条件
-        if(head==null)
-            return null;
-        if(k==0)
-            return head;
+        //处理边界条件
+        if(head == null ) return null;
+        if(head.next == null ) return head;
 
+        int len = 0;
         ListNode p = head;
-        int length = 1;
-        while(p.next != null){
+        while(p!=null) {
+            len++;
             p = p.next;
-            length++;
+        }
+        k = k % len;
+        if(k==0) {
+            return head;
+        }
+        int step = len - k;
+        p = head;
+        ListNode lastP = null;
+        while(step>0) {
+            step--;
+            lastP = p;
+            p = p.next;
+        }
+        while(p.next !=null) {
+            p = p.next;
         }
         p.next = head;
-
-        k= k%length;k = length - k;k--;
-        p=head;
-        while(k-->0){
-            p=p.next;
-        }
-        ListNode res = p.next;
-        p.next=null;
-        return res;
+        head = lastP.next;
+        lastP.next = null;
+        return head;
     }
 
 
