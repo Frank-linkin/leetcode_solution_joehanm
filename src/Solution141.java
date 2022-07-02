@@ -1,14 +1,6 @@
+import dataStructrue.ListNode;
+
 public class Solution141 {
-
-      class ListNode {
-          int val;
-          ListNode next;
-          ListNode(int x) {
-              val = x;
-              next = null;
-          }
-      }
-
     public boolean hasCycle(ListNode head) {
         //处理边界条件
         if(head == null) return false;

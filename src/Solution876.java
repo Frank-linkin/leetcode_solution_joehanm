@@ -1,10 +1,6 @@
-public class Solution876 {
-       public class ListNode {
-           int val;
-           ListNode next;
-           ListNode(int x) { val = x; }
-       }
+import dataStructrue.ListNode;
 
+public class Solution876 {
     public ListNode middleNode(ListNode head) {
         if( head == null ) return null;
         ListNode fast = head;

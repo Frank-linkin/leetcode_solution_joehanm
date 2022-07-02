@@ -1,85 +1,55 @@
 public class Solution494 {
-    //version1 202104
-    public int findTargetSumWays_version1(int[] nums, int S) {
-        if (nums == null || nums.length == 0) {
-            return 0;
-        } else if (nums.length == 1) {
-            if (S == nums[0] || S == -nums[0]) {
-                return 1;
-            } else {
-                return 0;
-            }
-        }
-
-        int[][] dp = new int[2][2000 + 1];
-        int bound = nums[0];
-        if (nums[0] == 0) {
-            dp[0][1000] = 2;
-        } else {
-            dp[0][1000 + nums[0]] = 1;
-            dp[0][1000 - nums[0]] = 1;
-        }
-
-        int row = 1;
-        for (int i = 1; i < nums.length; i++) {
-            bound += nums[i];
-            row = i & 1;
-            for (int j = -bound; j <= bound; j++) {
-                if (nums[i] <= j + 1000 && j + 1000 <= 2000 - nums[i]) {
-                    dp[row][j + 1000] = dp[1 - row][j + 1000 - nums[i]] + dp[1 - row][j + 1000 + nums[i]];
-                } else if (j + 1000 < nums[i]) {
-                    dp[row][j + 1000] = dp[1 - row][j + 1000 + nums[i]];
-                } else {
-                    dp[row][j + 1000] = dp[1 - row][j + 1000 - nums[i]];
-                }
-                //System.out.printf("%d ",dp[row][j+1000]);
-            }
-            //System.out.println();
-        }
-        if (S > bound || S < -bound) {
-            return 0;
-        } else {
-            return dp[row][S + 1000];
-        }
+    //21:43 开始 22:06结束
+    public int findTargetSumWays(int[] nums, int target) {
+        return countIndex(nums,nums.length-1,target);
     }
 
-    public int findTargetSumWays(int[] nums, int S) {
-        int sum = getSum(nums);
-        int dif = sum - S;
-        if ((dif & 1) == 1)
-            return 0;
-        dif = dif >> 1;
-        int[][] dp = new int[nums.length][sum + 1];
-        //初始化第一行，第一行只有一个数
-        dp[0][nums[0]] = 1;
-        dp[0][0]=1;
-        for (int i = 1; i < nums.length; i++) {
-            for (int j = 0; j <= sum; j++) {
-                if(j==0){
-                    dp[i][j] = 1;
-                }
-                else if(j<nums[i]){
-                    dp[i][j] = dp[i-1][j];
-                }
-                else{
-                    dp[i][j] = dp[i-1][j-nums[i]] + dp[i-1][j];
-                }
+    public int countIndex(int[] nums,int index,int target) {
+        int resp = 0;
+        if(index==0){
+            if(target-nums[index]==0){
+                resp++;
             }
+            if(target+nums[index]==0){
+                resp++;
+            }
+            return resp;
         }
-        return dp[nums.length-1][dif];
-    }
-    public int getSum(int[] nums) {
-        int sum = 0;
-        for (int i = 0; i < nums.length; i++) {
-            sum += nums[i];
-        }
-        return sum;
-    }
 
+        resp += countIndex(nums,index-1,target-nums[index]);
+        resp += countIndex(nums,index-1,target+nums[index]);
+        return resp;
+    }
     public static void main(String[] args) {
         Solution494 solution494 = new Solution494();
-        int[] nums = {1,0};
-        int S = 1;
+        int[] nums = {1,1,1,1,1};
+        int S = 3;
         System.out.println(solution494.findTargetSumWays(nums, S));
     }
+    /**
+     * 给你一个整数数组 nums 和一个整数 target 。
+     *
+     * 向数组中的每个整数前添加 '+' 或 '-' ，然后串联起所有整数，可以构造一个 表达式 ：
+     *
+     * 例如，nums = [2, 1] ，可以在 2 之前添加 '+' ，在 1 之前添加 '-' ，然后串联起来得到表达式 "+2-1" 。
+     * 返回可以通过上述方法构造的、运算结果等于 target 的不同 表达式 的数目。
+     *
+     * 输入：nums = [1,1,1,1,1], target = 3
+     * 输出：5
+     * 解释：一共有 5 种方法让最终目标和为 3 。
+     * -1 + 1 + 1 + 1 + 1 = 3
+     * +1 - 1 + 1 + 1 + 1 = 3
+     * +1 + 1 - 1 + 1 + 1 = 3
+     * +1 + 1 + 1 - 1 + 1 = 3
+     * +1 + 1 + 1 + 1 - 1 = 3
+     *
+     * 思路一 非动态规划：
+     *  考虑nums[i],
+     *  设置一个数组dp[target],dp[target] = dp[target-nums[i]] + dp[target+nums[i]]
+     *  这次不使用数组，而是使用一个固定nums.length层的递归函数
+     *  时间复杂度O(nums.length)
+     *  countCombination(in
+     *  思路二 动态规划
+     *
+     */
 }

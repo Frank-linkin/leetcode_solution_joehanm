@@ -1,6 +1,3 @@
-package linkedList;
-
-
 import org.junit.Test;
 
 import java.util.LinkedList;

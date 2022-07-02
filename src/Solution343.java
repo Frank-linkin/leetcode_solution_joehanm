@@ -1,31 +1,23 @@
 public class Solution343 {
-
     public int integerBreak(int n) {
-        int[] res = new int[n+1];
-        if(n==2){
+        if(n==0) {
+            return 0;
+        }
+        if(n==1) {
             return 1;
         }
-
-        res[1] = 1;
-        res[2] = 1;
-        int left, right;
-        int max;
-        int part1,part2;
-        for(int i = 3; i <=n ;i ++){
-            max =0;
-            for(left=1,right =i-1;left<=right;left++,right--){
-                part1 = res[left]>left?res[left]:left;
-                part2 = res[right]>right?res[right]:right;
-
-                int mul = part1*part2;
-                if(mul>max){
-                    max = part1*part2;
-                }
-            }
-
-            res[i] = max;
+        if(n==2) {
+            return 2;
         }
-        return res[n];
+        int max = -1;
+        for(int i = 1; i< (n>>1)+1;i++) {
+            int result1=integerBreak(i);
+            int result2 = integerBreak(n-i);
+
+            int curResult = (i>result1?i:result1)*((n-i)>result2?(n-i):result2);
+            max = max<curResult?curResult:max;
+        }
+        return max;
     }
 
     public static void main(String[] args) {
@@ -33,4 +25,8 @@ public class Solution343 {
 
         System.out.println(solution343.integerBreak(10));
     }
+    /**
+     * 思路：
+     *  将数分别分割为[1,n-1],[2,n-1]
+     */
 }

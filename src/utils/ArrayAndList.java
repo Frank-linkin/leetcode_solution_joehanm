@@ -1,5 +1,7 @@
 package utils;
 
+import dataStructrue.ListNode;
+
 import java.util.ArrayList;
 
 public class ArrayAndList {

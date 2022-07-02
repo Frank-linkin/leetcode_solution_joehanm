@@ -1,69 +1,64 @@
 public class Solution1277 {
-    public int countSquares1(int[][] matrix) {
-        int m = matrix.length;
-        int n = matrix[0].length;
-
-        int sum = 0;
-        for(int i = 0 ;i < m ; i++){
-            for(int j=0 ; j < n ; j ++){
-                sum +=countPointSquares(matrix,i,j);
-            }
+    public int countSquares(int[][] matrix) {
+        if ( matrix == null || matrix.length == 0 ) {
+            return 0;
         }
 
-
-        return sum;
-    }
-    public int countPointSquares(int[][] matrix,int x, int y){
-        int count = 0;
-        int maxl = Math.min(matrix.length-x,matrix[0].length-y);
-
-        while(count < maxl){
-            for(int i = 0 ; i <=count;i++){
-                if(matrix[x+count][y+i] == 0){
-                    return count;
+        //使用两个
+        int count=0;
+        int[][] dp = new int[2][matrix[0].length];
+        for(int i = 0; i < matrix.length; i++) {
+            int row = (i&1);
+            for(int j = 0 ; j < matrix[0].length ; j++) {
+                if(matrix[i][j] == 1) {
+                    if(i==0||j==0) {
+                        dp[row][j] = 1;
+                    }else{
+                        dp[row][j] = min(dp[row][j-1],dp[1-row][j-1],dp[1-row][j])+1;
+                    }
+                }else{
+                    dp[row][j] = 0;
                 }
+                count+=dp[row][j];
+
             }
-            for(int i = 0 ; i <count;i++){
-                if(matrix[x+i][y+count] == 0){
-                    return count;
-                }
-            }
-            count++;
         }
-
         return count;
     }
 
-    public int countSquares(int[][] matrix) {
-        int m = matrix.length;
-        int n = matrix[0].length;
-        int[][] count = new int[m][n];
-
-
-        int sum = 0;
-        for(int i = 0 ; i < m ; i ++){
-            for(int j = 0 ; j < n ; j++){
-                if( i == 0 || j == 0 ){
-                    count[i][j] = matrix[i][j];
-                }
-                else if( matrix[i][j] == 0 ){
-                    count[i][j] = 0;
-                }
-                else {
-                    count[i][j] = Math.min(count[i-1][j],Math.min(count[i-1][j-1],count[i][j-1]))+1;
-                }
-                //System.out.println("count["+i+"]["+j+"] = "+count[i][j]);
-                sum+=count[i][j];
+    public int min(int a,int b, int c) {
+        if(a<=b){
+            if(a<=c){
+                return a;
+            }else{
+                return c;
+            }
+            //a>b
+        }else{
+            if(b<=c){
+                return b;
+            }else{
+                return c;
             }
         }
-        return sum;
     }
-
-
+    //20:00 开始
     public static void main(String[] args) {
         int[][] data = {{0,1,1,1},{1,1,1,1},{0,1,1,1}};
         Solution1277 solution1277 = new Solution1277();
 
         System.out.println(solution1277.countSquares(data));
     }
+    /**
+     * dp[i][j]为以(i,j)为右下角的正方形的最大长度
+
+     *
+     * if matrix[i][j] == 1
+     *    if i== 0 || j==0
+     *      dp[i][j] = 1
+     *    else
+     *      dp[i][j] = min{dp[i-1][j],dp[i-1][j-1],dp[i][j-1]} +1
+     *  else
+     *    dp[i][j] = 0
+     */
 }

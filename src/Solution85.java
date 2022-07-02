@@ -1,75 +1,77 @@
+import java.util.LinkedList;
+
 public class Solution85 {
     public static void main(String[] args) {
         char[][] matrix = new char[][]{
-                "10100".toCharArray(),
-                "10111".toCharArray(),
-                "11111".toCharArray(),
-                "10010".toCharArray()
+                "0010".toCharArray(),
+                "1111".toCharArray(),
+                "1111".toCharArray(),
+                "1110".toCharArray(),
+                "1100".toCharArray(),
+                "1111".toCharArray(),
+                "1110".toCharArray()
+
+
+
         };
         Solution85 a = new Solution85();
         System.out.println(a.maximalRectangle(matrix));
     }
 
     public int maximalRectangle(char[][] matrix) {
-        if(matrix==null)
-            return 0;
-        if(matrix[0]==null||matrix[0].length == 0 ){
+        if ( matrix == null || matrix.length == 0|| matrix[0].length == 0 ) {
             return 0;
         }
-        int[][] dp = new int[2][matrix[0].length];
 
-        int max = 0;
-        int index = 0;
-        for(int i = 0 ; i< matrix.length ; i++){
-            for(int j= 0 ; j < matrix[0].length ; j++){
-            //    System.out.printf("%c ",matrix[i][j]);
+        int[] height = new int[matrix[0].length];
+        int maxAcreage = -1;
+        int[] leftIndex = new int[matrix[0].length];
+        int[] rightIndex = new int[matrix[0].length];
+        LinkedList<Data> monotonousStack = new LinkedList<>();
+        for(int i = 0 ; i< matrix.length ; i++ ) {
+            for(int j = 0 ; j < matrix[0].length; j++) {
+                height[j] = matrix[i][j]=='0'?0:(height[j]+1);
+                leftIndex[j] = -1;
+                rightIndex[j] = matrix[0].length;
             }
-            //System.out.println();
-        }
-        //System.out.println();
+            for(int p : height) {
+                System.out.printf("%d ",p);
+            }
+            System.out.println();
 
-        for(int i = 0 ; i < matrix.length ; i++){
-            index = i&1;
-            for( int j = 0;j<matrix[0].length;j++){
-                if(matrix[i][j]=='1'){
-                    if(i==0&&j==0){
-                        dp[index][j] = 1;
-                    }
-                    else if(i==0){
-                        dp[index][j] = dp[index][j-1]+1;
-                    }
-                    else if(j==0){
-                        dp[index][j] = dp[1-(index)][j]+1;
-                    }
-                    else{
-                        if(dp[1-(index)][j-1]==0){
-                            dp[index][j] = dp[index][j-1]>dp[1-(index)][j]?dp[index][j-1]+1:dp[1-(index)][j]+1;
-                        }
-                        else if(dp[index][j-1]==0){
-                            dp[index][j] = 0;
-                            for(int p = i ; p >=0&&matrix[p][j]=='1';p--){
-                                dp[index][j]++;
-                            }
-                        }
-                        else if(dp[1-(index)][j]==0){
-                            dp[index][j] = 0;
-                            for(int p = j; p>=0&&matrix[i][p]=='1';p--){
-                                dp[index][j]++;
-                            }
-                        }
-                        else{
-                            dp[index][j] = dp[index][j-1]+dp[1-(index)][j]-dp[1-(index)][j-1]+1;
-                        }
-                    }
+            for(int j = 0 ; j < height.length ; j++ ) {
+                while(monotonousStack.size()>0 && monotonousStack.getLast().height>height[j]){
+                    Data last = monotonousStack.pollLast();
+                    rightIndex[last.index] = j;
                 }
-                else{
-                    dp[index][j] = 0;
-                }
-                max = max>dp[index][j]?max:dp[index][j];
-                //System.out.printf("%d ",dp[index][j]);
+                monotonousStack.addLast(new Data(j,height[j]));
             }
-            //System.out.println();
+            monotonousStack.clear();
+
+            for(int j = height.length-1;j>=0;j--) {
+                while(monotonousStack.size()>0&&monotonousStack.getFirst().height>height[j]) {
+                    Data first = monotonousStack.pollFirst();
+                    leftIndex[first.index] = j;
+                }
+                monotonousStack.addFirst(new Data(j,height[j]));
+            }
+            monotonousStack.clear();
+
+            for(int j = 0 ; j < height.length ; j++ ) {
+                int acreage = (rightIndex[j]-leftIndex[j]-1)*height[j];
+                maxAcreage = maxAcreage<acreage?acreage:maxAcreage;
+            }
         }
-        return max;
+        return maxAcreage;
     }
+
+    class Data{
+        Integer index;
+        Integer height;
+        public Data(Integer index, Integer height) {
+            this.index = index;
+            this.height = height;
+        }
+    }
+
 }

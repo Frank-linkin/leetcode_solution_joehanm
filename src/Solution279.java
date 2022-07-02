@@ -1,40 +1,43 @@
 public class Solution279 {
-    //verison
-/*    public int numSquares(int n) {
-        if(n==1){
+    public int numSquares(int n) {
+        int[] count =new int[n+1];
+        return numSquaresCore(n,count);
+    }
+
+    public int numSquaresCore(int n,int[] count) {
+        if(n==0) {
+            count[0]=1;
             return 1;
         }
-        else if(n==2){
-            return 2;
+        if(n==1) {
+            count[1] = 1;
+            return 1;
         }
 
-        int[] dp = new int[n+1];
-        dp[1] = 1;
-        dp[2] = 2;
-        int num;
-        int base= 1;
-        int remain;
-        for(int i = 3 ; i <=n ;i ++ ){
-            num = i;
-            if( i == (base+1)*(base+1) ){
-                base+=1;
-                dp[i] = 1;
-                continue;
-            }
-            for(int j = base ; j >= 1 ; j--){
-                remain = i - j*j;
-                if(num>(dp[remain]+1)){
-                    num = dp[remain]+1;
-                }
-            }
-            dp[i] = num;
+        if(count[n]!=0) {
+            return count[n];
         }
-        return dp[n];
-    }*/
+        int min = 0x7fffffff;
+        int i = 1;
+        int square = 1;
+        while(square<=n) {
+            int left = n-square;
+            if(left==0) {
+                count[n]=1;
+                return 1;
+            }
+            if(count[left]==0){
+                count[left]=numSquaresCore(left,count);
+            }
+            if(count[left]<min-1){
+                min = count[left]+1;
+            }
 
-    //version2(2021年11月10日09:06:38)
-    public int numSquares(int n) {
-        return 0;
+            i++;
+            square = i*i;
+        }
+        count[n]=min;
+        return count[n];
     }
 
 
@@ -54,4 +57,24 @@ public class Solution279 {
         System.out.println(" 12 = "+solution279.numSquares(12));
         System.out.println(" 13 = "+solution279.numSquares(13));
     }
+    /**
+     * 思路一：
+     *      5 = 1 +4
+     *      6 = 1 + 1 + 4
+     *      7 = 1+ 1 +1 +4
+     *      8 = 4 + 4
+     *      给定一个数字n，设p<=n的最大完全平方数，最那么它最少的完全平方数的数量
+     *        count[n] = 1 + count[n-p]
+     *  这个思路不对，举个例子
+     *      12 = 4 + 4 +4而不是9+1+1+1
+     *  改：
+     *      给定n，假设p*p为<=n的最大完全平方数，那么它最少的完全平方数量
+     *      resp = min( calculate(n-i*i)+1.
+     *      其中1<=i<=p
+     *      记录每个n的完全平方的最小数量为count[n]
+     *      这种比较慢，可能是因为Math.Sqrt()开平方比较耗费CPU
+     *  思路二 - 动态规划：
+     *      count[n]表示的含义一定要明确，千万不能重复计算。
+     *
+     */
 }

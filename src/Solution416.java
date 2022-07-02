@@ -1,37 +1,31 @@
 public class Solution416 {
+    //开始：11:13
     public boolean canPartition(int[] nums) {
-        //首先考虑一些边界情况
-        if(nums == null||nums.length==1||nums.length==0){
+        if(nums==null||nums.length==0) {
             return false;
         }
-        else if(nums.length == 2){
-            return nums[0] == nums[1];
+        if(nums.length==1) {
+            return false;
         }
-        else{
-            int sum = 0 ;
-            for(int i = 0 ; i < nums.length ;i ++ ){
-                sum+=nums[i];
-            }
-            if( (sum&1)==1 ){
-                return false;
-            }
-            else{
-                int tnum = sum/2;
-                boolean[] dp = new boolean[tnum+1];
-                int bound = nums[0];
-                dp[nums[0]] = true;
-                dp[0] = true;
-                for(int i = 1 ; i<nums.length ;i ++){
-                    for(int j = tnum ; j>=nums[i] ; j-- ){
-                        if(dp[j-nums[i]]==true){
-                            //System.out.println(" j = "+j);
-                            dp[j] = true;
-                        }
-                    }
-                }
-                return dp[tnum];
+
+        int sum = 0;
+        for(int a:nums){
+            sum +=a;
+        }
+        if((sum&1)==1){
+            return false;
+        }
+        sum = sum>>1;
+        boolean[] dp = new boolean[sum+1];
+        int max = 0;
+        dp[0] = true;
+        for(int i = 0 ; i<nums.length;i++) {
+            max+=nums[i];
+            for(int j =Math.min(max,sum);j>=nums[i];j--) {
+                dp[j] = dp[j-nums[i]];
             }
         }
+        return dp[sum];
     }
 
     public static void main(String[] args) {
@@ -39,4 +33,18 @@ public class Solution416 {
         int[] data = {2,2,3,5};
         System.out.println(solution416.canPartition(data));
     }
+
+    /**
+     * 方案一：
+     *      [1,5,11,5]
+     *      [1,2,10,11]
+            求出数组的和，如果和为奇数，直接returnfalse
+     *      如果是偶数，看看能不能挑出几个数和和为total/2,记target = total/2
+     *      dp[i]表示前i个数的和
+     *      dp[i][j]表示利用前n个数生成和J
+     *      当j<=nums[i]时
+     *          dp[i][j] = dp[i-1][j]
+     *      当j>nums[i]时
+     *          dp[i][j] = dp[i][j-nums[i]]
+     */
 }

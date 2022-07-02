@@ -4,34 +4,47 @@ import java.util.List;
 import java.util.Set;
 
 public class Solution139 {
+    public boolean wordBreak(String s, List<String> wordDict) {
+        if(s==null||s.length()==0) {
+            return true;
+        }
+        boolean[] dp = new boolean[s.length()];
+        //dp[0] = true;
+        int i = 0;
+        while(i<=dp.length) {
+            if(i==0||dp[i-1]==true){
+                for(String a :wordDict) {
+                    int tail = i+a.length();
+                    if(tail<=dp.length&&s.substring(i,tail).equals(a)){
+                        dp[tail-1] = true;
+                    }
+                }
+            }
+            i++;
+        }
+        return dp[dp.length-1];
+    }
+
     public static void main(String[] args) {
         Solution139 solution139 = new Solution139();
-        String s = "applepenapple";
+        String s = "catsandog";
+        System.out.println(s.substring(1, 3));
         List<String> Dic = new ArrayList<String>();
-        Dic.add("apple");
-        Dic.add("pen");
-//        Dic.add("sand");
-//        Dic.add("and");
-//        Dic.add("cat");
-        System.out.println(solution139.wordBreak_version1(s,Dic));
+        Dic.add("cats");
+        Dic.add("dog");
+        Dic.add("sand");
+        Dic.add("and");
+        Dic.add("cat");
+        Dic.add("og");
+        System.out.println(solution139.wordBreak(s,Dic));
         System.out.println(s.substring(0,3));
     }
 
-    //version1 202104
-    public boolean wordBreak_version1(String s, List<String> wordDict) {
-        Set<String> wordDictSet = new HashSet(wordDict);
-        boolean[] dp = new boolean[s.length()+1];
-        dp[0] = true;
-        for(int i = 1 ; i<= s.length();i++){
-            for(int j = 0 ; j < i ;j++){
-                if(dp[j]&&wordDictSet.contains(s.substring(j,i))){
-                    dp[i] = true;
-                    break;
-                }
-            }
-        }
-        return dp[s.length()];
-    }
 
+    /**
+     * 思路一：动态规划
+     * dp[i] 表示str[0-i]是可以拼起来的
+     *
+     */
 
 }

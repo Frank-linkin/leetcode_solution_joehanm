@@ -1,5 +1,3 @@
-package Heap;
-
 import org.junit.Test;
 
 import java.util.Stack;

@@ -1,4 +1,4 @@
-package utils;
+package dataStructrue;
 
 public class ListNode {
     public int val;

@@ -4,37 +4,52 @@ import java.util.Arrays;
 
 public class Solution16 {
     public int threeSumClosest(int[] nums, int target) {
-        //边界条件处理
-        //if( nums == null ) return 0; //这个不同了，因为每组输入都只有唯一正确答案
+        if(nums == null|| nums.length <3) {
+            return target;
+        }
+
         Arrays.sort(nums);
+        int pos = 0;
+        int minDistance = 0x7fffffff;
+        //System.out.println(minDistance);
+        int sum = -1;
+        while(pos< nums.length -2 ) {
+            int left = pos + 1;
+            int right = nums.length -1;
 
 
-        int res = 0;
-        int res1 =0;
-        int result;
-        for(int i = 0 ; i < nums.length-2 ; i++){
-            int left = i+1,right = nums.length -1;
-            res = (nums[i]+nums[right]+nums[right])>target?(nums[i]+nums[right]+nums[left]-target):(target-(nums[i]+nums[right]+nums[left]));
-            System.out.printf("%d + %d +%d - %d = %d\n",nums[i],nums[left],nums[right],target,res);
-            while(true){
-                if(left>=right) break;
-                result = nums[i]+nums[left]+nums[right];
-                if( result > target){
-                    res = res<(result-target)?res:(result-target);
-                    System.out.printf("%d + %d +%d - %d = %d\n",nums[i],nums[left],nums[right],target,res);
-                    right--;
+            while(left<right) {
+                int curSum = nums[left]+nums[right]+nums[pos];
+                if(curSum < target) {
+                    if( minDistance > (target-curSum)) {
+                        minDistance = target - curSum;
+                        sum = curSum;
+                    }
+
+                    int tem = nums[left];
+                    while(left<right&&nums[left]==tem){
+                        left++;
+                    }
                 }
-                if( result < target){
-                    res = res<(target-result)?res:(target-result);
-                    System.out.printf("%d + %d +%d - %d = %d\n",nums[i],nums[left],nums[right],target,res);
+                else{
+                    if(minDistance>(curSum- target)) {
+                        minDistance = curSum - target;
+                        sum = curSum;
+                    }
 
-                    left++;
+                    int tem = nums[right];
+                    while(left<right&& nums[right]==tem ) {
+                        right--;
+                    }
                 }
-                if(result ==target)
-                    return 0;
+            }
+
+            int tem = nums[pos];
+            while(nums[pos] == tem) {
+                pos++;
             }
         }
-        return res;
+        return sum;
     }
 
     @Test

@@ -1,7 +1,5 @@
 import org.junit.Test;
-import utils.ListNode;
-
-import java.util.jar.JarOutputStream;
+import dataStructrue.ListNode;
 
 public class Solution2 {
 

@@ -1,22 +1,35 @@
+import java.util.LinkedList;
+
 public class Solution121 {
     public int maxProfit(int[] prices) {
-        int min = 0;
-        int profit = 0;
-        for(int i = 1 ; i < prices.length;i++){
-            if(prices[i]>prices[i-1]){
-                if(prices[i]-prices[min]>profit){
-                    profit = prices[i] - prices[min];
-                }
-            }else if(prices[i]<prices[min]){
-                min = i;
-            }
+        if ( prices == null || prices.length < 2){
+            return 0;
         }
-        return profit;
+
+        int maxProfit = -1;
+        LinkedList<Integer> monotonousStack = new LinkedList<Integer>();
+        for(int a : prices) {
+            if(monotonousStack.size()!=0&&monotonousStack.getLast()>=a){
+                maxProfit = maxProfit<(monotonousStack.getLast()-monotonousStack.getFirst())?(monotonousStack.getLast()-monotonousStack.getFirst()):maxProfit;
+                while(monotonousStack.size()!=0&&monotonousStack.getLast()>=a) {
+                    monotonousStack.pollLast();
+                }
+            }
+            monotonousStack.addLast(a);
+        }
+        if(monotonousStack.size()>=2) {
+            maxProfit = maxProfit<(monotonousStack.getLast()-monotonousStack.getFirst())?(monotonousStack.getLast()-monotonousStack.getFirst()):maxProfit;
+        }
+        return maxProfit;
     }
+
+
 
     public static void main(String[] args) {
         int[] data = {7,1,5,3,6,4};
         Solution121 solution121 = new Solution121();
         System.out.println(solution121.maxProfit(data));
     }
+
+
 }

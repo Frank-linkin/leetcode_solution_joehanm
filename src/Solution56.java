@@ -4,34 +4,43 @@ import java.util.*;
 
 public class Solution56 {
     public int[][] merge(int[][] intervals) {
-        if(intervals==null){
+        if(intervals == null || intervals.length == 0 ) {
             return null;
         }
-        if(intervals.length==1){
-            return intervals;
-        }
-        Arrays.sort(intervals, new Comparator<int[]>() {
+
+        Arrays.sort(intervals,new Comparator<int[]>(){
             @Override
-            public int compare(int[] o1, int[] o2) {
-                if(o1[0]!=o2[0]){
-                    return o1[0]-o2[0];
-                }
-                else{
-                    return o2[1]-o1[1];
-                }
+           public int compare(int[] a,int[] b) {
+                return a[0]-b[0];
             }
         });
-        List<int[]> list  = new ArrayList<int[] >();
-        int[] now = intervals[0];
-        for(int i = 1 ; i<intervals.length;i++){
-            if(intervals[i][0]>now[1]||i==intervals.length-1){
-                list.add(now);
-                now = intervals[i];
+//        for(int[] a :intervals) {
+//            System.out.printf("%d ",a[0]);
+//        }
+
+
+        int left = intervals[0][0] ,right = intervals[0][1];
+        LinkedList<int[]> list = new LinkedList<int[]>();
+        for(int i = 1; i<intervals.length ; i++) {
+            int[] a = intervals[i];
+            if(a[0]>right){
+                //一个新的区间
+                int[] newInterval = new int[2];
+                newInterval[0] =left;
+                newInterval[1] = right;
+                list.add(newInterval);
+                left = a[0];
+                right = a[1];
             }
-            else if(intervals[i][1]>now[1]){
-                now[1] = intervals[i][1];
+            else{
+                right = right<a[1]?a[1]:right;
             }
         }
+        //一个新的区间
+        int[] newInterval = new int[2];
+        newInterval[0] =left;
+        newInterval[1] = right;
+        list.add(newInterval);
         return list.toArray(new int[list.size()][2]);
     }
     @Test

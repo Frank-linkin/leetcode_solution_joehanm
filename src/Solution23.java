@@ -1,7 +1,6 @@
+import dataStructrue.ListNode;
 import org.junit.Test;
 
-import java.util.Comparator;
-import java.util.PriorityQueue;
 import utils.*;
 
 public class Solution23 {

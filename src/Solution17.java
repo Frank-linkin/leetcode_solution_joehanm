@@ -1,66 +1,52 @@
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Solution17 {
-    public class Hash{
-        char a;
-        Hash next;
-
-        public Hash(char a){
-            this.a=a;
-        }
-    }
-
-
+    //11:27-开始
     public List<String> letterCombinations(String digits) {
-        if(digits==null||digits.length()==0){
-            return new ArrayList<String>();
+        LinkedList<String> resp = new LinkedList<>();
+        if(digits == null || digits.length()==0) {
+            return resp;
         }
-
-        ArrayList<String> res = new ArrayList<String>();
-        StringBuffer buf = new StringBuffer();
-        //建造一个hash表
-        Hash[] table = new Hash[8];
-        for(int i = 0 ; i< 8  ; i++){
-            if(i>=6){
-                table[i] = new Hash((char)(i*3+1+'a'));
-            }
-            else
-                table[i]= new Hash((char)(i*3+'a'));
-        }
-        for(int i = 0 ; i<8 ; i++){
-            Hash p = table[i];
-            for(int j = 1 ; (i+1==table.length&&(table[i].a+j)<='z')||(i+1<table.length&&table[i].a+j<table[i+1].a);j++){
-                p.next = new Hash((char)(table[i].a+j));
-                p=p.next;
-            }
-        }
-//        Hash p = table[7];
-//        while(p!=null){
-//            System.out.printf("%c ",p.a);
-//            p=p.next;
+        int[] map = {0,3,6,9,12,15,19,22,26};
+        StringBuilder cur = new StringBuilder();
+        //        for(int i = 0 ; i< intToChar.length-1; i++ ) {
+//            int p = intToChar[i];
+//            while(p<intToChar[i+1]){
+//                System.out.printf("%c ",p+'a');
+//                p++;
+//            }
+//            System.out.println();
 //        }
-        //hash表建立完毕
-        findCombination(table,res,buf,digits,0);
-        return res;
+        generateSequence(map,0,digits,cur,resp);
+
+        return resp;
     }
 
-    public void findCombination(Hash[] table,List<String> res,StringBuffer buf,String digits,int index ){
-        if(index>=digits.length()){
-            res.add(buf.toString());
+    public void generateSequence(int[] map,int index,String digits,StringBuilder cur,LinkedList<String> resp){
+        if(index>=digits.length()) {
+            resp.addLast(cur.toString());
             return;
         }
-        for(Hash c = table[(digits.charAt(index)-'2')];c!=null;c=c.next){
-            buf.append(c.a);
-            findCombination(table,res,buf,digits,index+1);
-            buf.deleteCharAt(buf.length()-1);
+        int digit = digits.charAt(index)-'0';
+        digit-=2;
+        for(int i = map[digit];i<map[digit+1];i++) {
+            cur.append((char)('a'+i));
+            generateSequence(map,index+1,digits,cur,resp);
+            cur.deleteCharAt(cur.length()-1);
         }
     }
-
     @Test
     public void test1(){
-        System.out.println(letterCombinations("23"));
+        System.out.println(letterCombinations("22"));
     }
+    /**
+     * 2 - abc
+     * 3 - def
+     * 4 - ghi
+     * 5 - jkl
+     */
 }
